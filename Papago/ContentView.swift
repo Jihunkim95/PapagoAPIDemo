@@ -143,15 +143,6 @@ struct ContentView: View {
             
         }
         
-//        NavigationView {
-//            Form {
-//                TextField("Enter text", text: $source)
-//                    .textFieldStyle(RoundedBorderTextFieldStyle())
-//                    .padding()
-//                    .animation(.easeInOut) // 애니메이션 추가
-//            }
-//            .navigationTitle("My App")
-//        }
     }
 
     

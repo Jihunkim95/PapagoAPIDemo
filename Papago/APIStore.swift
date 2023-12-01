@@ -11,9 +11,8 @@ class TranslateData: ObservableObject{
     @Published var translatedText: String?
     
     func translateText(_ expression:String,_ source:String,_ target:String) {
-        let clientId = "bWuBu02GTBUtbAYWfmsF" // 애플리케이션 클라이언트 아이디값
-        let clientSecret = "BK6Ity8Isx" // 애플리케이션 클라이언트 시크릿값
-
+        let clientId = clientId ?? "" // 애플리케이션 클라이언트 아이디값
+        let clientSecret = clientSecret ?? "" // 애플리케이션 클라이언트 시크릿값
 //        let text = "만나서 반갑습니다."
         let apiURL = URL(string: "https://openapi.naver.com/v1/papago/n2mt")!
 
@@ -31,6 +30,7 @@ class TranslateData: ObservableObject{
                 return
             }
 
+            print(apiURL)
             if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
                 do {
                     let result = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
@@ -54,4 +54,50 @@ class TranslateData: ObservableObject{
         task.resume()
     }
 
+    //plist에서 선언한 clientId 받기
+    private var clientId: String?{
+        get{
+            let keyfilename = "ApiKeys"
+            let api_id = "client_Id"
+            
+            //생성한 .plist 파일 경로 불러오기
+            guard let filePath = Bundle.main.path(forResource: keyfilename, ofType: "plist") else {
+                fatalError("Couldn't find file '\(keyfilename).plist'")
+            }
+            
+            // .plist 파일 내용을 딕셔너리로 받아오기
+            let plist = NSDictionary(contentsOfFile: filePath)
+            
+            // 딕셔너리에서 키 찾기
+            guard let value = plist?.object(forKey: api_id) as? String else {
+                fatalError("Couldn't find key '\(api_id)'")
+            }
+            
+            return value
+        }
+    }
+    
+    //plist에서 선언한 clientId 받기
+    private var clientSecret: String?{
+        get{
+            let keyfilename = "ApiKeys"
+            let api_secret = "client_Secret"
+            
+            //생성한 .plist 파일 경로 불러오기
+            guard let filePath = Bundle.main.path(forResource: keyfilename, ofType: "plist") else {
+                fatalError("Couldn't find file '\(keyfilename).plist'")
+            }
+            
+            // .plist 파일 내용을 딕셔너리로 받아오기
+            let plist = NSDictionary(contentsOfFile: filePath)
+            
+            // 딕셔너리에서 키 찾기
+            guard let value = plist?.object(forKey: api_secret) as? String else {
+                fatalError("Couldn't find key '\(api_secret)'")
+            }
+            
+            return value
+        }
+    }
 }
+
